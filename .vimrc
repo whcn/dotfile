@@ -9,14 +9,14 @@ call vundle#begin()
 "-----------------------------------------
 Plugin 'VundleVim/Vundle.vim' "插件管理
 "-----------------------------------------
-" Plugin 'rizsotto/Bear'
+Plugin 'tpope/vim-fugitive'
 "-----------------------------------------
-" Plugin 'lilydjwg/fcitx.vim'  "退出插入模式后无需切换输入法
-" let g:ttimeoutlen=100 "避免在终端下退出插入模式时有较大延迟
+" Plugin 'vim-airline/vim-airline'
+" Plugin 'vim-airline/vim-airline-themes'
 "-----------------------------------------
 Plugin 'Valloric/YouCompleteMe'
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py' "全局配置文件路径  
-let g:ycm_path_to_python_interpreter = '/usr/bin/python2'
+let g:ycm_global_ycm_extra_conf = '/Users/wuhuan/dotfile/.ycm_extra_conf.py' "全局配置文件路径  
+" let g:ycm_path_to_python_interpreter = '/usr/bin/python2'
 let g:ycm_confirm_extra_conf = 0 "关闭每次导入配置文件前的询问  
 let g:ycm_seed_identifiers_with_syntax = 1 " 开启语法关键字补全 
 let g:ycm_enable_diagnostic_highlighting = 0 "关闭检查高亮
@@ -38,11 +38,11 @@ nnoremap <leader>jj :YcmCompleter GoToDefinitionElseDeclaration<cr>
 " Plugin 'scrooloose/syntastic'
 " let g:syntastic_always_populate_loc_list = 1 "方便使用syntastic进行语法检查  
 "-----------------------------------------
-" Plugin 'rdnetto/YCM-Generator'
-"-----------------------------------------
 Plugin 'easymotion/vim-easymotion'
 
 " let g:EasyMotion_do_mapping=1
+
+let g:EasyMotion_smartcase=1
 
 map <leader><leader> <Plug>(easymotion-prefix)
 " <leader>f{char} to move to {char}
@@ -60,12 +60,12 @@ map  <leader><leader>w <Plug>(easymotion-bd-w)
 nmap <leader><leader>w <Plug>(easymotion-overwin-w)
 
 "-----------------------------------------
-Plugin 'holgado/minibufexpl.vim'
-" 显示/隐藏 MiniBufExplorer 窗口，minibuffer助记mb
-map <leader>mb :MBEToggle<cr>
-" buffer 切换快捷键
-map <leader><tab> :bn<cr>
-map <leader><S-tab> :bp<cr>
+" Plugin 'holgado/minibufexpl.vim'
+" " 显示/隐藏 MiniBufExplorer 窗口，minibuffer助记mb
+" map <leader>mb :MBEToggle<cr>
+" " buffer 切换快捷键
+" map <leader><tab> :bn<cr>
+" map <leader><S-tab> :bp<cr>
 "-----------------------------------------
 Plugin 'tpope/vim-surround' 
 Plugin 'tpope/vim-commentary'
@@ -101,21 +101,17 @@ Plugin 'SirVer/ultisnips'                   "引擎
 let g:UltiSnipsExpandTrigger="<tab>"        "使用tab键自动补全    
 let g:UltiSnipsJumpForwardTrigger="<c-j>"   "向前遍历
 let g:UltiSnipsJumpBackwardTrigger="<c-k>"  "向后遍历
-" let g:UltiSnipsSnippetDirectories=["mysnippets"] "自定义模板路经
 let g:UltiSnipsSnippetDirectories=["mysnippets"]
 "-----------------------------------------
 "主题颜色
 Plugin 'chriskempson/tomorrow-theme'    
 Plugin 'tomasr/molokai'
 Plugin 'altercation/vim-colors-solarized'
-colorscheme Tomorrow-Night-Eighties
+" colorscheme Tomorrow-Night-Eighties
+" colorscheme Tomorrow-Night
 " colorscheme molokai
-" syntax enable
-" syntax on
-" let g:solarized_termcolors=256
-" set t_Co=256
-" set background=dark
-" colorscheme solarized
+set background=dark
+colorscheme solarized
 "-----------------------------------------
 Plugin 'Yggdroot/indentLine'    "对齐线段
 let g:indentLine_color_term=100
@@ -175,7 +171,6 @@ nmap <leader>p "+p
 nmap <leader>q :q<cr>
 " 定义快捷键保存当前窗口内容
 nmap <leader>w :w<cr>:source ~/.vimrc<cr>:<C-u>nohlsearch<cr><C-l>
-
 " 定义快捷键保存所有窗口内容并退出 vim
 nmap <leader>WQ :wa<cr>:qa<cr>
 " 不做任何保存，直接退出 vim
@@ -219,15 +214,6 @@ map ,, :!clear<cr>:w<cr>:!nvcc --relaxed-constexpr -std=c++11 % -o a `pkg-config
 "-----------------------------------------
 "               通用快捷键               |
 "-----------------------------------------
-"
-"gvim-------------------------------------
-" set guioptions-=L
-" " set guioptions-=l
-" " set guioptions-=R
-" set guioptions-=r
-" " set guioptions-=m
-" set guioptions-=T
-"-----------------------------------------
 
 "在行尾插入;
 " inoremap ;<cr> <end>;<cr>
@@ -260,7 +246,7 @@ set wildmenu
 syntax enable
 "允许使用指定配色替换默认配色
 syntax on
-"可视化模式时的颜色
+"选中文本时的颜色
 hi Visual term=reverse cterm=reverse guibg=Grey
 "查找高亮
 set hlsearch
@@ -270,8 +256,6 @@ set smartcase
 set incsearch
 "清除查找高亮
 nnoremap <silent> <C-l> :<C-u>nohlsearch<cr><C-l>
-"光标停止闪烁
-set gcr=a:block-blinkon0
 "-----------------------------------------
 "切换窗口
 " nnoremap <C-J> <C-W><C-J>
@@ -283,4 +267,39 @@ set gcr=a:block-blinkon0
 au BufNewFile,BufRead *.cu set ft=cuda.cpp.c
 au BufNewFile,BufRead *.cuh set ft=cuda.cpp.c
 " autocmd FileType cuda set ft=c
+
+"-----------------------------------------
+"                 MacVim                 |
+"-----------------------------------------
+
+"窗口尺寸
+set lines=50
+set columns=130
+
+" 禁止显示滚动条
+set guioptions-=l
+set guioptions-=L
+set guioptions-=r
+set guioptions-=R
+
+"光标
+highlight Cursor guibg=#ecac44
+highlight iCursor guibg=#6acb25
+set guicursor=n-v-c:block-Cursor "块状光标
+set guicursor+=i:ver20-iCursor "横杠光标
+set guicursor+=a:blinkwait0 "禁止闪烁
+
+" 字体大小
+set guifont=Menlo:h13
+
+" 窗口分割线
+set fillchars+=vert:¦
+highlight vertsplit guibg=bg guifg=grey
+
+" 中文输入法切换
+" set noimdisable
+" autocmd! InsertLeave * set imdisable
+" autocmd! InsertEnter * set noimdisable
+
+
 
