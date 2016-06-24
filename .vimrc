@@ -9,14 +9,21 @@ call vundle#begin()
 "-----------------------------------------
 Plugin 'VundleVim/Vundle.vim' "插件管理
 "-----------------------------------------
-Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-fugitive' "git接口
+"-----------------------------------------
+Plugin 'octol/vim-cpp-enhanced-highlight' "c++语法高亮
+"-----------------------------------------
+Plugin 'kien/ctrlp.vim' "查找文件
+"-----------------------------------------
+Plugin 'dyng/ctrlsf.vim' "侧边栏显示关键字在不同文件的位置
+"-----------------------------------------
+Plugin 'terryma/vim-multiple-cursors' "多光标编辑
 "-----------------------------------------
 " Plugin 'vim-airline/vim-airline'
 " Plugin 'vim-airline/vim-airline-themes'
 "-----------------------------------------
 Plugin 'Valloric/YouCompleteMe'
 let g:ycm_global_ycm_extra_conf = '/Users/wuhuan/dotfile/.ycm_extra_conf.py' "全局配置文件路径  
-" let g:ycm_path_to_python_interpreter = '/usr/bin/python2'
 let g:ycm_confirm_extra_conf = 0 "关闭每次导入配置文件前的询问  
 let g:ycm_seed_identifiers_with_syntax = 1 " 开启语法关键字补全 
 let g:ycm_enable_diagnostic_highlighting = 0 "关闭检查高亮
@@ -72,7 +79,7 @@ Plugin 'tpope/vim-commentary'
 Plugin 'Raimondi/delimitMate'
 "-----------------------------------------
 Plugin 'scrooloose/nerdtree' "浏览文件系统，file list缩写fl
-nmap <Leader>fl :NERDTreeToggle<CR>
+nnoremap <Leader>fl :NERDTreeToggle<CR>
 " 设置NERDTree子窗口宽度
 let NERDTreeWinSize=32
 " 设置NERDTree子窗口位置
@@ -83,12 +90,12 @@ let NERDTreeShowHidden=1
 let NERDTreeMinimalUI=1
 " 删除文件时自动删除文件对应 buffer
 let NERDTreeAutoDeleteBuffer=1
-set modifiable
+" set modifiable
 "-----------------------------------------
 Plugin 'taglist.vim'    "列出文件中的类、函数变量
 set tags=tags  "使用当前目录下的tags文件
 set autochdir  "从当前目录向上直至找到tags文件" 
-let Tlist_Ctags_Cmd='/usr/bin/ctags'    "ctags可执行路径
+" let Tlist_Ctags_Cmd='/usr/bin/ctags'    "ctags可执行路径
 let Tlist_Show_One_File=1   "只显示当前文件的tag
 let Tlist_Exit_OnlyWindow=1 "若taglist是最后一个窗口，则退出vim
 let Tlist_Auto_Open=1       "打开vim时自动打开taglist
@@ -197,19 +204,35 @@ nnoremap <leader>< 20<c-w><
 "              F1~F9快捷键               |
 "-----------------------------------------
 "F1 <c>
-map <F2> :!clear:w<cr>:!gcc % -o a<cr>:!./a<cr>
-"F3 <c++>
-map <F3> :!clear<cr>:w<cr>:!g++ -std=c++11 % -o a<cr>:!./a<cr>
-" map ,, :!clear<cr>:w<cr>:!g++ -std=c++11 % -o a<cr>:!./a<cr>
-"shell
-map <F4> :!clear:w<cr>:!bash %<cr>
-"F5 <python>
-nnoremap <F5> :w<cr>:!clear<cr>:!python %<cr>
-"F8 <cpp+opencv>
-nnoremap <F8> :w<cr>:!clear<cr>:!g++ % -o a `pkg-config --libs opencv`<cr>:!./a<cr>
-"F9 <cuda+opencv>
-map <F9> :!clear<cr>:w<cr>:!nvcc % -o a `pkg-config --libs opencv`<cr>:!./a<cr>
-map ,, :!clear<cr>:w<cr>:!nvcc --relaxed-constexpr -std=c++11 % -o a `pkg-config --libs opencv`<cr>:!./a<cr>
+" map <F2> :!clear:w<cr>:!gcc % -o a<cr>:!./a<cr>
+" "F3 <c++>
+" map <F3> :!clear<cr>:w<cr>:!g++ -std=c++11 % -o a<cr>:!./a<cr>
+" " map ,, :!clear<cr>:w<cr>:!g++ -std=c++11 % -o a<cr>:!./a<cr>
+" "shell
+" map <F4> :!clear:w<cr>:!bash %<cr>
+" "F5 <python>
+" nnoremap <F5> :w<cr>:!clear<cr>:!python %<cr>
+" "F8 <cpp+opencv>
+" nnoremap <F8> :w<cr>:!clear<cr>:!g++ % -o a `pkg-config --libs opencv`<cr>:!./a<cr>
+" "F9 <cuda+opencv>
+" map <F9> :!clear<cr>:w<cr>:!nvcc % -o a `pkg-config --libs opencv`<cr>:!./a<cr>
+" map ,, :!clear<cr>:w<cr>:!nvcc --relaxed-constexpr -std=c++11 % -o a `pkg-config --libs opencv`<cr>:!./a<cr>
+
+map <F3> :call CompileAndRun()<CR>
+func! CompileAndRun()
+    exec "w"
+    if &filetype == 'c'
+        exec "!g++ % -o %<"
+        exec "! ./%<"
+    elseif &filetype == 'cpp'
+        exec "!g++ -std=c++11 % -o %<"
+        exec "! ./%<"
+    elseif &filetype == 'python'
+		exec "!python %"
+    elseif &filetype == 'sh'
+        exec "!sh %"
+    endif
+endfunc
 
 "-----------------------------------------
 "               通用快捷键               |
@@ -218,7 +241,7 @@ map ,, :!clear<cr>:w<cr>:!nvcc --relaxed-constexpr -std=c++11 % -o a `pkg-config
 "在行尾插入;
 " inoremap ;<cr> <end>;<cr>
 "插入花括号
-" inoremap {<cr> <end> {<cr>}<esc>O
+inoremap {<cr> <end> {<cr>}<esc>O
 "自动补全花括号
 " inoremap {<cr> {<cr>}<esc>O
 "跳到行首
@@ -290,16 +313,16 @@ set guicursor+=i:ver20-iCursor "横杠光标
 set guicursor+=a:blinkwait0 "禁止闪烁
 
 " 字体大小
-set guifont=Menlo:h13
+set guifont=Consolas:h15
 
 " 窗口分割线
 set fillchars+=vert:¦
 highlight vertsplit guibg=bg guifg=grey
 
 " 中文输入法切换
-set noimdisable
-autocmd! InsertLeave * set imdisable
-autocmd! InsertEnter * set noimdisable
+" set noimdisable
+" autocmd! InsertLeave * set imdisable
+" autocmd! InsertEnter * set noimdisable
 
 
 
