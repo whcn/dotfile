@@ -297,9 +297,9 @@ set fillchars+=vert:¦
 highlight vertsplit guibg=bg guifg=grey
 
 " 中文输入法切换
-" set noimdisable
-" autocmd! InsertLeave * set imdisable
-" autocmd! InsertEnter * set noimdisable
+set noimdisable
+autocmd! InsertLeave * set imdisable
+autocmd! InsertEnter * set noimdisable
 
 
 
