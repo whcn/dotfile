@@ -9,6 +9,11 @@ call vundle#begin()
 "-----------------------------------------
 Plugin 'VundleVim/Vundle.vim' "插件管理
 "-----------------------------------------
+Plugin 'vim-scripts/Align'
+"-----------------------------------------
+Plugin 'sjl/gundo.vim' "分支undo
+nnoremap <leader>ud :GundoToggle<CR>
+"-----------------------------------------
 Plugin 'tpope/vim-fugitive' "git接口
 "-----------------------------------------
 Plugin 'octol/vim-cpp-enhanced-highlight' "c++语法高亮
@@ -19,6 +24,8 @@ Plugin 'dyng/ctrlsf.vim' "侧边栏显示关键字在不同文件的位置
 "-----------------------------------------
 Plugin 'terryma/vim-multiple-cursors' "多光标编辑
 "-----------------------------------------
+Plugin 'rizzatti/dash.vim' "打开Dash查看文档
+"-----------------------------------------
 " Plugin 'vim-airline/vim-airline'
 " Plugin 'vim-airline/vim-airline-themes'
 "-----------------------------------------
@@ -26,9 +33,9 @@ Plugin 'Valloric/YouCompleteMe'
 let g:ycm_global_ycm_extra_conf = '/Users/wuhuan/dotfile/.ycm_extra_conf.py' "全局配置文件路径  
 let g:ycm_confirm_extra_conf = 0 "关闭每次导入配置文件前的询问  
 let g:ycm_seed_identifiers_with_syntax = 1 " 开启语法关键字补全 
-let g:ycm_enable_diagnostic_highlighting = 0 "关闭检查高亮
 let g:ycm_use_ultisnips_completer = 0 "关闭ycm内置的ultisnips
 let g:ycm_seed_identifiers_with_syntax = 1
+let g:ycm_enable_diagnostic_highlighting = 1 "关闭检查高亮
 let g:ycm_enable_diagnostic_signs = 0
 let g:ycm_min_num_of_chars_for_completion = 1
 let g:ycm_key_list_select_completion = ['<c-n>', '<Down>']
@@ -92,13 +99,13 @@ let NERDTreeMinimalUI=1
 let NERDTreeAutoDeleteBuffer=1
 " set modifiable
 "-----------------------------------------
-Plugin 'taglist.vim'    "列出文件中的类、函数变量
-set tags=tags  "使用当前目录下的tags文件
-set autochdir  "从当前目录向上直至找到tags文件" 
+" Plugin 'taglist.vim'    "列出文件中的类、函数变量
+" set tags=tags  "使用当前目录下的tags文件
+" set autochdir  "从当前目录向上直至找到tags文件" 
 " let Tlist_Ctags_Cmd='/usr/bin/ctags'    "ctags可执行路径
-let Tlist_Show_One_File=1   "只显示当前文件的tag
-let Tlist_Exit_OnlyWindow=1 "若taglist是最后一个窗口，则退出vim
-let Tlist_Auto_Open=1       "打开vim时自动打开taglist
+" let Tlist_Show_One_File=1   "只显示当前文件的tag
+" let Tlist_Exit_OnlyWindow=1 "若taglist是最后一个窗口，则退出vim
+" let Tlist_Auto_Open=1       "打开vim时自动打开taglist
 "autocmd BufWritePost * call system("ctags -R")
 "let Tlist_Process_File_Always=1
 "let Tlist_Use_SingleClick=1
@@ -177,7 +184,9 @@ nmap <leader>p "+p
 " 定义快捷键关闭当前分割窗口
 nmap <leader>q :q<cr>
 " 定义快捷键保存当前窗口内容
-nmap <leader>w :w<cr>:source ~/.vimrc<cr>:<C-u>nohlsearch<cr><C-l>
+nmap <leader>w :w<cr>
+" 重新加载.vimrc
+nmap <leader>s :source ~/.vimrc<cr>
 " 定义快捷键保存所有窗口内容并退出 vim
 nmap <leader>WQ :wa<cr>:qa<cr>
 " 不做任何保存，直接退出 vim
@@ -198,7 +207,7 @@ nnoremap <leader>M %
 nnoremap <leader>> 20<c-w>>
 nnoremap <leader>< 20<c-w><
 "在行尾添加分号
-" inoremap <leader><leader>; <end>;
+" inoremap <leader>; <esc>A;
 
 "-----------------------------------------
 "              F1~F9快捷键               |
@@ -213,7 +222,7 @@ nnoremap <leader>< 20<c-w><
 " "F5 <python>
 " nnoremap <F5> :w<cr>:!clear<cr>:!python %<cr>
 " "F8 <cpp+opencv>
-" nnoremap <F8> :w<cr>:!clear<cr>:!g++ % -o a `pkg-config --libs opencv`<cr>:!./a<cr>
+nnoremap <F10> :w<cr>:!clear<cr>:!g++ % -o %< `pkg-config --cflags --libs opencv`<cr>:! ./%<<cr>
 " "F9 <cuda+opencv>
 " map <F9> :!clear<cr>:w<cr>:!nvcc % -o a `pkg-config --libs opencv`<cr>:!./a<cr>
 " map ,, :!clear<cr>:w<cr>:!nvcc --relaxed-constexpr -std=c++11 % -o a `pkg-config --libs opencv`<cr>:!./a<cr>
@@ -223,10 +232,10 @@ func! CompileAndRun()
     exec "w"
     if &filetype == 'c'
         exec "!g++ % -o %<"
-        exec "! ./%<"
+        exec "!./%<"
     elseif &filetype == 'cpp'
         exec "!g++ -std=c++11 % -o %<"
-        exec "! ./%<"
+        exec "!./%<"
     elseif &filetype == 'python'
 		exec "!python %"
     elseif &filetype == 'sh'
@@ -239,7 +248,9 @@ endfunc
 "-----------------------------------------
 
 "在行尾插入;
-" inoremap ;<cr> <end>;<cr>
+inoremap ;; <esc>A; 
+"插入花括号
+inoremap {{ <esc>A {<cr>}<esc>O
 "插入花括号
 inoremap {<cr> <end> {<cr>}<esc>O
 "自动补全花括号
@@ -287,8 +298,8 @@ nnoremap <silent> <C-l> :<C-u>nohlsearch<cr><C-l>
 " nnoremap <C-H> <C-W><C-H>
 "-----------------------------------------
 "cuda语法高亮
-au BufNewFile,BufRead *.cu set ft=cuda.cpp.c
-au BufNewFile,BufRead *.cuh set ft=cuda.cpp.c
+au BufNewFile,BufRead *.cu set filetype=cuda.cpp.c
+au BufNewFile,BufRead *.cuh set filetype=cuda.cpp.c
 " autocmd FileType cuda set ft=c
 
 "-----------------------------------------
@@ -320,9 +331,7 @@ set fillchars+=vert:¦
 highlight vertsplit guibg=bg guifg=grey
 
 " 中文输入法切换
-" set noimdisable
-" autocmd! InsertLeave * set imdisable
-" autocmd! InsertEnter * set noimdisable
-
-
+set noimdisable
+autocmd! InsertLeave * set imdisable
+autocmd! InsertEnter * set noimdisable
 
