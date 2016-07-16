@@ -58,20 +58,20 @@ Plugin 'easymotion/vim-easymotion'
 
 let g:EasyMotion_smartcase=1
 
-map <leader><leader> <Plug>(easymotion-prefix)
+map <leader> <Plug>(easymotion-prefix)
 " <leader>f{char} to move to {char}
-map  <leader><leader>f <Plug>(easymotion-bd-f)
-nmap <leader><leader>f <Plug>(easymotion-overwin-f)
+map  <leader>f <Plug>(easymotion-bd-f)
+nmap <leader>f <Plug>(easymotion-overwin-f)
 
 " s{char}{char} to move to {char}{char}
-nmap <leader><leader>s <Plug>(easymotion-overwin-f2)
+nmap <leader>s <Plug>(easymotion-overwin-f2)
 
 " Move to line
-map <leader><leader>L <Plug>(easymotion-bd-jk)
-nmap <leader><leader>L <Plug>(easymotion-overwin-line)
+map <leader>L <Plug>(easymotion-bd-jk)
+nmap <leader>L <Plug>(easymotion-overwin-line)
 " Move to word
-map  <leader><leader>w <Plug>(easymotion-bd-w)
-nmap <leader><leader>w <Plug>(easymotion-overwin-w)
+map  <leader>w <Plug>(easymotion-bd-w)
+nmap <leader>w <Plug>(easymotion-overwin-w)
 
 "-----------------------------------------
 " Plugin 'holgado/minibufexpl.vim'
@@ -82,11 +82,13 @@ nmap <leader><leader>w <Plug>(easymotion-overwin-w)
 " map <leader><S-tab> :bp<cr>
 "-----------------------------------------
 Plugin 'tpope/vim-surround' 
+"-----------------------------------------
 Plugin 'tpope/vim-commentary'
+"-----------------------------------------
 Plugin 'Raimondi/delimitMate'
 "-----------------------------------------
 Plugin 'scrooloose/nerdtree' "浏览文件系统，file list缩写fl
-nnoremap <Leader>fl :NERDTreeToggle<CR>
+nnoremap <Leader>l :NERDTreeToggle<CR>
 " 设置NERDTree子窗口宽度
 let NERDTreeWinSize=32
 " 设置NERDTree子窗口位置
@@ -194,20 +196,18 @@ nmap <leader>Q :qa!<cr>
 " 依次遍历子窗口
 " nnoremap <leader>nw <C-W><C-W>
 " 跳转至右方的窗口
-nnoremap <leader>lw <C-W>l
-" 跳转至左方的窗口
-nnoremap <leader>hw <C-W>h
-" 跳转至上方的子窗口
-nnoremap <leader>kw <C-W>k
-" 跳转至下方的子窗口
+" nnoremap <leader>lw <C-W>l
+" " 跳转至左方的窗口
+" nnoremap <leader>hw <C-W>h
+" " 跳转至上方的子窗口
+" nnoremap <leader>kw <C-W>k
+" " 跳转至下方的子窗口
 " nnoremap <leader>jw <C-W>j
-" 定义快捷键在结对符之间跳转
-nnoremap <leader>M %
+" " 定义快捷键在结对符之间跳转
+" nnoremap <leader>M %
 " 增加窗口宽度
 nnoremap <leader>> 20<c-w>>
 nnoremap <leader>< 20<c-w><
-"在行尾添加分号
-" inoremap <leader>; <esc>A;
 
 "-----------------------------------------
 "              F1~F9快捷键               |
@@ -222,10 +222,15 @@ nnoremap <leader>< 20<c-w><
 " "F5 <python>
 " nnoremap <F5> :w<cr>:!clear<cr>:!python %<cr>
 " "F8 <cpp+opencv>
-nnoremap <F10> :w<cr>:!clear<cr>:!g++ % -o %< `pkg-config --cflags --libs opencv`<cr>:! ./%<<cr>
+nnoremap <F10> :w<cr>:!clear<cr>:!g++ % -o %< `pkg-config --cflags --libs opencv`<cr>:!./main<cr>
 " "F9 <cuda+opencv>
 " map <F9> :!clear<cr>:w<cr>:!nvcc % -o a `pkg-config --libs opencv`<cr>:!./a<cr>
 " map ,, :!clear<cr>:w<cr>:!nvcc --relaxed-constexpr -std=c++11 % -o a `pkg-config --libs opencv`<cr>:!./a<cr>
+
+" nnoremap <F2> :wa<cr>:make<cr><cr>:!./main<cr>
+" nnoremap <F2> :!rm -rf main<cr>:wa<cr>:make<cr>:cw<cr><cr>:!./main<cr>
+
+nnoremap <F2> :!rm -rf main<cr>:wa<cr>:make<cr><cr>:cw<cr><cr>:!./main<cr>
 
 map <F3> :call CompileAndRun()<CR>
 func! CompileAndRun()
@@ -271,6 +276,8 @@ set softtabstop=4
 set autoindent      
 "行号
 set number
+"相对行号
+set relativenumber
 "高亮当前行/列
 set cursorline
 " set cursorcolumn
@@ -284,18 +291,14 @@ syntax on
 hi Visual term=reverse cterm=reverse guibg=Grey
 "查找高亮
 set hlsearch
-"查找时忽略大小写
+"取消大小写敏感
+set ignorecase
+"智能大小写敏感
 set smartcase
 "递增查找
 set incsearch
 "清除查找高亮
 nnoremap <silent> <C-l> :<C-u>nohlsearch<cr><C-l>
-"-----------------------------------------
-"切换窗口
-" nnoremap <C-J> <C-W><C-J>
-" nnoremap <C-K> <C-W><C-K>
-" nnoremap <C-L> <C-W><C-L>
-" nnoremap <C-H> <C-W><C-H>
 "-----------------------------------------
 "cuda语法高亮
 au BufNewFile,BufRead *.cu set filetype=cuda.cpp.c
@@ -331,7 +334,7 @@ set fillchars+=vert:¦
 highlight vertsplit guibg=bg guifg=grey
 
 " 中文输入法切换
-set noimdisable
-autocmd! InsertLeave * set imdisable
-autocmd! InsertEnter * set noimdisable
+" set imdisable
+" autocmd! InsertLeave * set imdisable
+" autocmd! InsertEnter * set noimdisable
 
