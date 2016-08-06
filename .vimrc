@@ -81,6 +81,8 @@ nmap <leader>w <Plug>(easymotion-overwin-w)
 " map <leader><tab> :bn<cr>
 " map <leader><S-tab> :bp<cr>
 "-----------------------------------------
+Plugin 'Shougo/vimshell.vim'
+"-----------------------------------------
 Plugin 'tpope/vim-surround' 
 "-----------------------------------------
 Plugin 'tpope/vim-commentary'
@@ -239,7 +241,8 @@ func! CompileAndRun()
         exec "!g++ % -o %<"
         exec "!./%<"
     elseif &filetype == 'cpp'
-        exec "!g++ -std=c++11 % -o %<"
+        exec "!clang++ -std=c++11 % -o %<"
+        " exec "!g++ -std=c++11 % -o %<"
         exec "!./%<"
     elseif &filetype == 'python'
 		exec "!python %"
