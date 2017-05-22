@@ -40,10 +40,11 @@
              c-c++-default-mode-for-headers 'c++-mode
              c-c++-enable-clang-support t)
       (chinese :variables
-                ;; chinese-enable-fcitx t 
+                chinese-enable-fcitx t
                 chinese-enable-avy-pinyin t
                 chinese-enable-youdao-dict t)
       ;; git
+      ;; fcitx
       markdown
       ;; org
       (shell :variables
@@ -264,6 +265,38 @@ in `dotspacemacs/user-config'."
   ;; ----------------------------------------------------
   (setq org-agenda-files(list "~/OrgMode")) ;;org文件路径
   ;; ----------------------------------------------------
+;;   (defun my-org-screenshot ()
+;;   "Take a screenshot into a time stamped unique-named file in the
+;; same directory as the org-buffer and insert a link to this file."
+;;   (interactive)
+;;   (org-display-inline-images)
+;;   (setq filename
+;;         (concat
+;;          (make-temp-name
+;;           (concat (file-name-nondirectory (buffer-file-name))
+;;                   "_imgs/"
+;;                   (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
+;;   (unless (file-exists-p (file-name-directory filename))
+;;     (make-directory (file-name-directory filename)))
+;; 					; take screenshot
+;;   (if (eq system-type 'darwin)
+;;       (progn
+;;         (call-process-shell-command "screencapture" nil nil nil nil " -s " (concat "\"" filename "\"" ))
+;;         (setq org-image-actual-width 300)
+;;         ;; (call-process-shell-command "convert" nil nil nil nil (concat "\"" filename "\" -resize  \"50%\"" ) (concat "\"" filename "\"" ))
+;; 	))
+;;   (if (eq system-type 'gnu/linux)
+;;       (call-process "import" nil nil nil filename))
+;; 					; insert into file if correctly taken
+;;   (if (file-exists-p filename)
+;;       (insert (concat "[[file:" filename "]]")))
+;;   (org-display-inline-images)
+;;   )
+
+;;   ;; (global-set-key (kbd "C-c s c") 'my-org-screenshot) 
+;;   (spacemacs/set-leader-keys "o c" 'my-org-screenshot)
+
+  ;; ----------------------------------------------------
   (add-hook 'text-mode-hook 'spacemacs/toggle-truncate-lines-off) ;;换行
   ;; ----------------------------------------------------
   ;; #+OPTIONS: html-postamble:nil 消除html末尾的脚注
@@ -276,15 +309,15 @@ in `dotspacemacs/user-config'."
   (global-set-key "\C-cb" 'org-iswitchb)
   ;; ----------------------------------------------------
   (setq org-capture-templates ;;capture模板
-      '(("i" "Item" entry (file+headline "~/OrgMode/item.org" "Item")
+      '(("i" "Item" entry (file+headline "~/Documents/OrgMode/item.org" "Item")
         "* TODO %i%?" 1)
-        ("w" "Work" entry (file+headline "~/OrgMode/work.org" "Work")
+        ("w" "Work" entry (file+headline "~/Documents/OrgMode/work.org" "Work")
         "* TODO %i%?" 1)
-        ("s" "Shop" entry (file+headline "~/OrgMode/shop.org" "Shop")
+        ("s" "Shop" entry (file+headline "~/Documents/OrgMode/shop.org" "Shop")
         "* TODO %i%?" 1)
-        ("b" "Book" entry (file+headline "~/OrgMode/book.org" "Book")
+        ("b" "Book" entry (file+headline "~/Documents/OrgMode/book.org" "Book")
         "* TODO %i%?" 1)
-        ("p" "Paper" entry (file+headline "~/OrgMode/paper.org" "Paper")
+        ("p" "Paper" entry (file+headline "~/Documents/OrgMode/paper.org" "Paper")
         "* TODO %i%?" 1)
         )
   )
